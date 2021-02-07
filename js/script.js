@@ -39,7 +39,7 @@ function startGame(assetsLoaded) {
 }
 
 function traiteMouseDown(event){
-  console.log("DOWN : USERSTAAAAAATE !!! "+ userState);
+  //console.log("DOWN : USERSTAAAAAATE !!! "+ userState);
   //console.log("Souris cliquée bouton = " + event.button);
   //console.log("Souris cliquée " + mousePos.x + " " + mousePos.y) 
 
@@ -66,7 +66,7 @@ function traiteMouseDown(event){
 }
 
 function traiteMouseUp(event){
-  console.log("UP : USERSTAAAAAATE !!! "+ userState);
+  //console.log("UP : USERSTAAAAAATE !!! "+ userState);
   //console.log("Souris relachée bouton = " + event.button);
   //console.log("Souris relachée " + mousePos.x + " " + mousePos.y);
 
@@ -190,6 +190,10 @@ function AnimationLoop(){
     case "cookieEnDrag": {
       grille.tabCookiesCliquees[0].dragAndDraw(ctx, mousePos.x, mousePos.y);
       break;
+    }
+    case "rien": {
+      grille.chute();
+      //grille.tabCookiesCliquees[1].drawHaut(ctx, grille.tabCookiesCliquees[0].colonne, grille.tabCookiesCliquees[0].ligne);
     }
      /*
     case "cookieEnDrop":{

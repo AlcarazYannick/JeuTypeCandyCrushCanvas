@@ -1,4 +1,15 @@
 class Cookie {
+
+  static urlsImagesNormales = [
+    "./assets/images/Croissant@2x.png",
+    "./assets/images/Cupcake@2x.png",
+    "./assets/images/Danish@2x.png",
+    "./assets/images/Donut@2x.png",
+    "./assets/images/Macaroon@2x.png",
+    "./assets/images/SugarCookie@2x.png",
+  ];
+
+
   constructor(type, ligne, colonne, image) {
     this.type = type;
     this.ligne = ligne;
@@ -32,7 +43,7 @@ class Cookie {
     ctx.restore();
   }
 
-/*
+
   drawHaut(ctx, x, y) {
 
     console.log(grille.hauteurLignes); 
@@ -41,7 +52,7 @@ class Cookie {
     console.log("currentY "+ this.currentY);
     console.log("y "+ y);
 
-    //ctx.drawImage(this.image, x*grille.largeurColonnes, this.currentY, this.width, this.height);
+    ctx.drawImage(this.image, x*grille.largeurColonnes, this.currentY, this.width, this.height);
 
     if(this.currentY < y*grille.hauteurLignes){
       this.currentY += 1;
@@ -54,7 +65,7 @@ class Cookie {
     ctx.restore();
   }
 
-
+/*
 
   drawBas(ctx, x, y) {
     
@@ -121,8 +132,8 @@ class Cookie {
 
     const distance = Math.sqrt((c2 - c1) * (c2 - c1) + (l2 - l1) * (l2 - l1));
     //console.log("Distance = " + distance);
-    console.log("Cookie 1: ligne"+ l1+ "colonne"+ c1 );
-    console.log("Cookie 2: ligne"+ l2+ "colonne"+ c2 );
+    //console.log("Cookie 1: ligne"+ l1+ "colonne"+ c1 );
+    //console.log("Cookie 2: ligne"+ l2+ "colonne"+ c2 );
     return distance;
   }
 

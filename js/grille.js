@@ -4,6 +4,8 @@ class Grille {
   tabCookies = [];
   tabCookiesCliquees = [];
   cookieSwap = new Cookie();
+  nbDeCookiesDifferents = 6;
+  monScore = 0;
 
   constructor(l, c, canvasLargeur, canvasHauteur, assetsLoaded) {
     this.nbLignes = l;
@@ -17,7 +19,7 @@ class Grille {
 
     // on passe en paramètre le nombre de cookies différents. 4 = facile, 5 = moyen,
     // 6 = difficile
-    this.remplirTableauDeCookies(6); // valeurs possible : 4, 5, 6 par ex
+    this.remplirTableauDeCookies(this.nbDeCookiesDifferents); // valeurs possible : 4, 5, 6 par ex
   }
 
   drawGrille(ctx) {
@@ -72,10 +74,10 @@ class Grille {
     let l = Math.floor(y / this.hauteurLignes);
     let c = Math.floor(x / this.largeurColonnes);
 
-    console.log("ligne : "+ l);
-    console.log("colonne : "+ c);
+    //console.log("ligne : "+ l);
+    //console.log("colonne : "+ c);
 
-    console.log(this.tabCookies[l][c])
+    //console.log(this.tabCookies[l][c])
     
     return this.tabCookies[l][c]
   }
@@ -94,36 +96,41 @@ class Grille {
    */
   remplirTableauDeCookies(nbDeCookiesDifferents) {
     this.tabCookies = create2DArray(this.nbLignes);
+  //VERSION DE LA METHODE QUI GENERE UNE GRILLE SANS ALIGNEMENT
+  
+    console.log("GRILLE SANS ALIGNEMENT GENERE");
 
+    do{
+      for(let l = 0; l < this.nbLignes; l++){
+        for(let c = 0; c < this.nbColonnes; c++){
+          let type = Math.floor(nbDeCookiesDifferents * Math.random());
+          let cookie;
 
-    for(let l = 0; l < this.nbLignes; l++){
-      for(let c = 0; c < this.nbColonnes; c++){
-        let type = Math.floor(nbDeCookiesDifferents * Math.random());
-        let cookie;
-
-        switch(type){
-          case 0:
-            cookie = new Cookie(type, l, c, this.assets.croissant);
-            break;
-          case 1:
-            cookie = new Cookie(type, l, c, this.assets.cupcake);
-            break;
-          case 2:
-            cookie = new Cookie(type, l, c, this.assets.danish);
-            break;
-          case 3:
-            cookie = new Cookie(type, l, c, this.assets.donut);
-            break; 
-          case 4:
-            cookie = new Cookie(type, l, c, this.assets.macaroon);
-            break; 
-          case 5:
-            cookie = new Cookie(type, l, c, this.assets.sugarCookie);
-            break; 
+          switch(type){
+            case 0:
+              cookie = new Cookie(type, l, c, this.assets.croissant);
+              break;
+            case 1:
+              cookie = new Cookie(type, l, c, this.assets.cupcake);
+              break;
+            case 2:
+              cookie = new Cookie(type, l, c, this.assets.danish);
+              break;
+            case 3:
+              cookie = new Cookie(type, l, c, this.assets.donut);
+              break; 
+            case 4:
+              cookie = new Cookie(type, l, c, this.assets.macaroon);
+              break; 
+            case 5:
+              cookie = new Cookie(type, l, c, this.assets.sugarCookie);
+              break; 
+          }
+          this.tabCookies[l][c] = cookie;
         }
-        this.tabCookies[l][c] = cookie;
       }
-    }
+
+    }while(this.faireDisparaitreTousLesAlignements())
     // TODO : remplir le tableau avec des cookies au hasard
   }
 
@@ -160,6 +167,10 @@ class Grille {
 
     grille.tabCookiesCliquees = [];
 
+    this.faireDisparaitreTousLesAlignements();
+    this.chute();
+    this.remplissage(this.nbDeCookiesDifferents);
+    this.autoAlignementsCookies();
     //this.tabCookiesCliquees[0].deselectionnee();
     
     
@@ -169,11 +180,140 @@ class Grille {
   }
   invisible(cookie){
     this.cookieSwap.image = cookie.image;
-    cookie.image = this.assets.tile;
+    cookie.image = this.assets.tileEmpty;
     
   }
 
   visible(cookie){
     cookie.image = this.cookieSwap.image;
   }
+
+   //Permet de faire disparaitre 3 (ou plus) cookies alignés en ligne et en colonne
+   faireDisparaitreTousLesAlignements(){
+    this.nbAlignements = 0;
+    for(let i=0; i<this.nbColonnes; i++){
+      this.faireDisparaitreMatch3Lignes(i);
+    }
+    
+    for(let j=0; j<this.nbColonnes; j++){
+      this.faireDisparaitreMatch3Colonnes(j);
+    }
+
+    return(this.nbAlignements !== 0);
+  }
+
+
+  //Permet de faire disparaitre 3 (ou plus) cookies alignés en ligne
+  faireDisparaitreMatch3Lignes(i){
+    for(let j=0; j<7; j++){
+      if((this.tabCookies[i][j].type == this.tabCookies[i][j+1].type) && (this.tabCookies[i][j+1].type == this.tabCookies[i][j+2].type)){
+        this.invisible(this.tabCookies[i][j]);
+        this.invisible(this.tabCookies[i][j+1]);
+        this.invisible(this.tabCookies[i][j+2]);
+        this.nbAlignements++;
+      }
+    }
+}
+
+//Permet de faire disparaitre 3 (ou plus) cookies alignés en colonne
+faireDisparaitreMatch3Colonnes(j){
+    for(let i=0; i<7; i++){
+      if((this.tabCookies[i][j].type == this.tabCookies[i+1][j].type) && (this.tabCookies[i+1][j].type == this.tabCookies[i+2][j].type)){
+        this.invisible(this.tabCookies[i][j]);
+        this.invisible(this.tabCookies[i+1][j]);
+        this.invisible(this.tabCookies[i+2][j]);
+        this.nbAlignements++;
+      }
+    }
+}
+
+
+//Permet de gérer la chute
+chute(){
+    
+  for(let j=0; j<this.nbColonnes; j++){
+    for(let i=this.nbLignes-1; i>-1; i--){
+
+      //Si un cookie est invisible
+      if(this.tabCookies[i][j].image == this.assets.tileEmpty){
+
+        if(i != 0){
+          let cpt = 0;
+          //Je recherche un cookie visible
+          do{
+            cpt++;
+          }while((i-cpt>0) && this.tabCookies[i - cpt][j].image == this.assets.tileEmpty)
+
+          
+          if(this.tabCookies[i - cpt][j].image != this.assets.tileEmpty){
+
+            //ETAPE 1 : Je transpose les caractéristiques du cookie visible à celui de l'invisible
+            //this.tabCookies[i][j].drawHaut(ctx, this.tabCookies[i - cpt][j].colonne, this.tabCookies[i - cpt][j].ligne)
+
+            //SANS ANIM
+            this.tabCookies[i][j].type = this.tabCookies[i - cpt][j].type;
+            this.tabCookies[i][j].deselectionnee();
+
+            //ETAPE 2 :et je rend invisible celui qui eétait visible
+            this.invisible(this.tabCookies[i - cpt][j]);
+   
+            console.log("Chute(s)");
+
+          }
+        } 
+        
+        //animationid = setInterval(A, 300);
+        //clearInterval(animationid)
+      }
+    }
+  }
+}
+
+
+//Permet de remplir de nouveaux cookies après une chute de cookies
+remplissage(nbDeCookiesDifferents) {
+
+  for(let j=0; j<this.nbColonnes; j++){
+    for(let i=this.nbLignes-1; i>-1; i--){
+      //si un cookie est invisible je creer un nouveau cookie qui va le remplacer
+      if(this.tabCookies[i][j].image == this.assets.tileEmpty){
+
+        this.tabCookies[i][j].type = Math.floor(Math.random()*(nbDeCookiesDifferents));
+        this.tabCookies[i][j].deselectionnee(); //remove le invisible
+        //this.tabCookies[i][j].image = Cookie.urlsImagesNormales[this.tabCookies[i][j].type];
+        //this.tabCookies[i][j].htmlImage.dataset.invisible = "false";
+        //this.tabCookies[i][j].htmlImage.classList.remove("cookies-selected");
+
+        console.log("Remplissage(s)");
+        this.score(); 
+      
+      }
+    }
+  }
+
+}
+
+
+/*Permet de faire disparaitre les cookies qui se sont formés indirectement 
+    lors d'une chute et d'un remplissage de cookies,
+    permet de gérer également la chute et le remplissage des cookies
+    Utile également pour le bouton "Faire Disparaitre les cookies alignés" ( executable avec la deuxième version de remplirTableauDeCookies())
+   */
+  autoAlignementsCookies(){
+    do{
+      this.faireDisparaitreTousLesAlignements();
+      this.chute();
+      this.remplissage(this.nbDeCookiesDifferents);
+    }while(this.faireDisparaitreTousLesAlignements())
+  }
+
+   //gestion du score :  augmente le score de 1 a chaque fois que la methode est appelé
+   score(){
+    this.monScore = this.monScore + 1;
+    let nouveauScore = "Score :"+ this.monScore;
+    //je change l'affichage du div qui permet d'affaicher le score par la variable nouveauScore
+    document.querySelector("#score").textContent = nouveauScore;
+  }
+
+
 }
