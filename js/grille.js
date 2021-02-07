@@ -58,7 +58,7 @@ class Grille {
       let x = 5
       for(let c = 0; c < this.nbColonnes; c++){  
         let cookie = this.tabCookies[l][c];
-        cookie.draw(ctx, x, y)
+        cookie.draw(ctx, x, y);
         
         //ctx.drawImage(this.assets.croissant, x, y);
         x += this.largeurColonnes;
@@ -73,12 +73,6 @@ class Grille {
 
     let l = Math.floor(y / this.hauteurLignes);
     let c = Math.floor(x / this.largeurColonnes);
-
-    //console.log("ligne : "+ l);
-    //console.log("colonne : "+ c);
-
-    //console.log(this.tabCookies[l][c])
-    
     return this.tabCookies[l][c]
   }
 
@@ -131,6 +125,9 @@ class Grille {
       }
 
     }while(this.faireDisparaitreTousLesAlignements())
+
+     
+
     // TODO : remplir le tableau avec des cookies au hasard
   }
 
@@ -148,6 +145,8 @@ class Grille {
 
     return (Cookie.distance(cookie1, cookie2) === 1);
   }
+
+  
 
   swapCookies(){
     ctx.save();
@@ -171,13 +170,10 @@ class Grille {
     this.chute();
     this.remplissage(this.nbDeCookiesDifferents);
     this.autoAlignementsCookies();
-    //this.tabCookiesCliquees[0].deselectionnee();
-    
-    
-
     ctx.restore();
 
   }
+
   invisible(cookie){
     this.cookieSwap.image = cookie.image;
     cookie.image = this.assets.tileEmpty;
@@ -247,23 +243,23 @@ chute(){
           
           if(this.tabCookies[i - cpt][j].image != this.assets.tileEmpty){
 
-            //ETAPE 1 : Je transpose les caractéristiques du cookie visible à celui de l'invisible
-            //this.tabCookies[i][j].drawHaut(ctx, this.tabCookies[i - cpt][j].colonne, this.tabCookies[i - cpt][j].ligne)
 
+            //ETAPE 1 : Je transpose les caractéristiques du cookie visible à celui de l'invisible
             //SANS ANIM
             this.tabCookies[i][j].type = this.tabCookies[i - cpt][j].type;
             this.tabCookies[i][j].deselectionnee();
 
-            //ETAPE 2 :et je rend invisible celui qui eétait visible
+            //AVEC ANIM
+            // ?? this.tabCookies[i][j].animChute(ctx, this.tabCookies[i - cpt][j].colonne, this.tabCookies[i - cpt][j].ligne);
+
+            //ETAPE 2 :et je rend invisible celui qui était visible
             this.invisible(this.tabCookies[i - cpt][j]);
-   
+            
             console.log("Chute(s)");
 
           }
         } 
-        
-        //animationid = setInterval(A, 300);
-        //clearInterval(animationid)
+
       }
     }
   }
@@ -275,14 +271,11 @@ remplissage(nbDeCookiesDifferents) {
 
   for(let j=0; j<this.nbColonnes; j++){
     for(let i=this.nbLignes-1; i>-1; i--){
-      //si un cookie est invisible je creer un nouveau cookie qui va le remplacer
+      //si un cookie est invisible
       if(this.tabCookies[i][j].image == this.assets.tileEmpty){
 
         this.tabCookies[i][j].type = Math.floor(Math.random()*(nbDeCookiesDifferents));
         this.tabCookies[i][j].deselectionnee(); //remove le invisible
-        //this.tabCookies[i][j].image = Cookie.urlsImagesNormales[this.tabCookies[i][j].type];
-        //this.tabCookies[i][j].htmlImage.dataset.invisible = "false";
-        //this.tabCookies[i][j].htmlImage.classList.remove("cookies-selected");
 
         console.log("Remplissage(s)");
         this.score(); 

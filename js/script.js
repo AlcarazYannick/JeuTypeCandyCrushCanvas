@@ -10,7 +10,6 @@ let mousePos = {};
 let userState = "rien";
 let cookieDragguee = null;
 let cookieClick = null;
-let anim;
 
 
 function init() {
@@ -39,9 +38,6 @@ function startGame(assetsLoaded) {
 }
 
 function traiteMouseDown(event){
-  //console.log("DOWN : USERSTAAAAAATE !!! "+ userState);
-  //console.log("Souris cliquée bouton = " + event.button);
-  //console.log("Souris cliquée " + mousePos.x + " " + mousePos.y) 
 
   switch(userState){
     case "cookieEnDrag":
@@ -54,21 +50,13 @@ function traiteMouseDown(event){
     let swap = grille.getCookie(mousePos.x, mousePos.y);
     cookieDragguee = swap;
     cookieDragguee.selectionnee();
-    //cookieDragguee = new Cookie(swap.type, swap.ligne, swap.colonne, swap.image);
-    
 
     grille.tabCookiesCliquees.push(cookieDragguee);
-    //grille.invisible(grille.tabCookies[swap.ligne][swap.colonne]);
-
-    
-    
+ 
   }
 }
 
 function traiteMouseUp(event){
-  //console.log("UP : USERSTAAAAAATE !!! "+ userState);
-  //console.log("Souris relachée bouton = " + event.button);
-  //console.log("Souris relachée " + mousePos.x + " " + mousePos.y);
 
   switch(userState){
     case "cookieEnDrag":
@@ -78,12 +66,8 @@ function traiteMouseUp(event){
       // regarder si on peut swapper ? ou si on est trop loin ?
       console.log("on essaie d'echanger avec un cookie de type : " + cookieCible.type);
       
-      //grille.tabCookies[swap.ligne][swap.colonne] = grille.tabCookiesCliquees[0];
-      
-      //userState = "cookieEnDrop";
       if(grille.swapPossible()){
         grille.swapCookies();  
-        anim = 1;
       }
       else{
         grille.tabCookiesCliquees = [];
@@ -102,9 +86,6 @@ function traiteMouseUp(event){
 }
 
 function traiteClick(event){
-  
-  //console.log("Souris relachée bouton = " + event.button);
-  //console.log("Souris relachée " + mousePos.x + " " + mousePos.y);
 
   switch(userState){
     case "cookieEnDrag":
@@ -113,21 +94,9 @@ function traiteClick(event){
       
       let swap = grille.getCookie(mousePos.x, mousePos.y);
       cookieClick = swap;
-      //cookieDragguee = new Cookie(swap.type, swap.ligne, swap.colonne, swap.image);
-      
+
 
       grille.tabCookiesCliquees.push(cookieClick);
-
-      /*console.log("CLICK : USERSTAAAAAATE !!! "+ userState);
-      console.log("CLICK : ANIIIIIIIM !!! "+ anim);
-
-      if(anim = -1){
-        console.log("CLICK : ANIIIIIIIM !!! "+ anim);
-        cookieClick.selectionnee();
-      }  
-      else{
-        cookieClick.deselectionnee();
-      }  */  
       break;
 
     case "cookie1Click":
@@ -135,9 +104,7 @@ function traiteClick(event){
       
       let swap2 = grille.getCookie(mousePos.x, mousePos.y);
       cookieClick = swap2;
-      //cookieDragguee = new Cookie(swap.type, swap.ligne, swap.colonne, swap.image);
-      
-
+   
       grille.tabCookiesCliquees.push(cookieClick);
 
       if(grille.swapPossible()){
@@ -147,8 +114,6 @@ function traiteClick(event){
         grille.tabCookiesCliquees = [];
       }
       
-
-      //cookieClick.deselectionnee();
       break;
 
   }
@@ -191,74 +156,10 @@ function AnimationLoop(){
       grille.tabCookiesCliquees[0].dragAndDraw(ctx, mousePos.x, mousePos.y);
       break;
     }
-    case "rien": {
-      grille.chute();
-      //grille.tabCookiesCliquees[1].drawHaut(ctx, grille.tabCookiesCliquees[0].colonne, grille.tabCookiesCliquees[0].ligne);
-    }
-     /*
-    case "cookieEnDrop":{
-      //console.log("distance" + Cookie.distance(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]))
-      //console.log("direction" + Cookie.direction(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]));
-
-
-      //if(Cookie.distance(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]) == 1){
-        if(Cookie.direction(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]) == "haut"){
-
-          console.log("haut");
-          grille.tabCookiesCliquees[1].drawHaut(ctx, grille.tabCookiesCliquees[0].colonne, grille.tabCookiesCliquees[0].ligne);
-          
-          
-        }
-        else if(Cookie.direction(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]) == "bas"){
-
-
-
-          console.log("tabclik l0 : "+ grille.tabCookiesCliquees[0].ligne);
-          console.log("tabclik c0 : "+ grille.tabCookiesCliquees[0].colonne);
-
-          console.log("tabclik l1 : "+ grille.tabCookiesCliquees[1].ligne);
-          console.log("tabclik c1 : "+ grille.tabCookiesCliquees[1].colonne);
-
-          
-
-          console.log("bas");
-          grille.tabCookiesCliquees[1].drawBas(ctx, grille.tabCookiesCliquees[0].colonne , grille.tabCookiesCliquees[0].ligne);
-          
-          
-        }
-        else if(Cookie.direction(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]) == "gauche"){
-
-          grille.tabCookiesCliquees[1].drawGauche(ctx, mousePos.x, mousePos.y);
-          //console.log("gauche");
-          
-        }
-        else if(Cookie.direction(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]) == "droite"){
-
-          grille.tabCookiesCliquees[1].drawDroite(ctx, mousePos.x, mousePos.y);
-          //console.log("droite");
-          
-        }
-        else{
-          console.log("autre");
-          userState = "rien";
-          grille.visible(grille.tabCookiesCliquees[0]);
-          break;
-        }
-        break;
-      //}
-
-    }
-    case "swap" :{
-      grille.tabCookiesCliquees = [];   
-      mousePos = {}
-      userState = "rien";
-      break;
-    }*/
-    
   }
   // on demande à redessiner 60 fois par seconde
-  requestAnimationFrame(AnimationLoop)
-}
+  requestAnimationFrame(AnimationLoop);
 
+}
 
 
