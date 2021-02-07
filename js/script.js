@@ -53,6 +53,7 @@ function traiteMouseDown(event){
     
     let swap = grille.getCookie(mousePos.x, mousePos.y);
     cookieDragguee = swap;
+    cookieDragguee.selectionnee();
     //cookieDragguee = new Cookie(swap.type, swap.ligne, swap.colonne, swap.image);
     
 
@@ -81,14 +82,13 @@ function traiteMouseUp(event){
       
       //userState = "cookieEnDrop";
       if(grille.swapPossible()){
-        grille.swapCookies();
+        grille.swapCookies();  
         anim = 1;
       }
       else{
-        grille.tabCookiesCliquees[0].deselectionnee();
         grille.tabCookiesCliquees = [];
-        anim = -1;
       }
+      
 
       
       userState = "rien";
@@ -146,8 +146,9 @@ function traiteClick(event){
       else{
         grille.tabCookiesCliquees = [];
       }
+      
 
-      cookieClick.deselectionnee();
+      //cookieClick.deselectionnee();
       break;
 
   }
@@ -189,7 +190,8 @@ function AnimationLoop(){
     case "cookieEnDrag": {
       grille.tabCookiesCliquees[0].dragAndDraw(ctx, mousePos.x, mousePos.y);
       break;
-    }/*
+    }
+     /*
     case "cookieEnDrop":{
       //console.log("distance" + Cookie.distance(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]))
       //console.log("direction" + Cookie.direction(grille.tabCookiesCliquees[0], grille.tabCookiesCliquees[1]));

@@ -146,6 +146,8 @@ class Grille {
     ctx.save();
     let cookie1 = this.tabCookiesCliquees[0];
     let cookie2 = this.tabCookiesCliquees[1]; 
+    this.tabCookiesCliquees[0].deselectionnee();
+    this.tabCookiesCliquees[1].deselectionnee();
 
     let tmpType = cookie1.type;
     let tmpImage = cookie1.image;
@@ -156,8 +158,10 @@ class Grille {
     cookie2.type = tmpType;
     cookie2.image = tmpImage;
 
-    this.tabCookiesCliquees[0].deselectionnee();
-    this.tabCookiesCliquees = [];
+    grille.tabCookiesCliquees = [];
+
+    //this.tabCookiesCliquees[0].deselectionnee();
+    
     
 
     ctx.restore();
